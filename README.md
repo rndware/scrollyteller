@@ -5,7 +5,7 @@ Each image sticks as you scroll, while titles and descriptions fade in and out, 
 
 ## 📷 Images
 
-<img src="https://github.com/rndware/scrollyteller/raw/master/main/screenshot.png" width="75%">
+<img src="https://github.com/rndware/scrollyteller/raw/main/media/screenshot.png" width="75%">
 
 ---
 
