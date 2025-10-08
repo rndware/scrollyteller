@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vue Sticky Gallery</title>
+    
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+
+    <style>
+      :root {
+        --gallery-scroll-height: 300vh;
+        --gallery-item-width: 600px;
+      }
+
+      body {
+        margin: 0;
+        font-family: system-ui, sans-serif;
+        background: #111;
+        color: #fff;
+      }
+
+      .gallery {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .gallery__item {
+        position: sticky;
+        top: 0;
+        width: var(--gallery-item-width);
+        height: var(--gallery-scroll-height);
+      }
+
+      .gallery__item.hidden {
+        height: calc(var(--gallery-scroll-height) / 2);
+        visibility: hidden;
+      }
+
+      .gallery__image {
+        position: sticky;
+        top: 0;
+        width: var(--gallery-item-width);
+        height: 100vh;
+        object-fit: cover;
+      }
+
+      .gallery__content {
+        position: relative;
+        top: calc(-1 * (var(--gallery-scroll-height)));
+        z-index: 10;
+        text-align: center;
+        padding: 2rem;
+
+        background: rgba(0, 0, 0, 0.4);
+        backdrop-filter: blur(4px);
+
+        animation: blur-clear-blur linear;
+        animation-timeline: view();
+        animation-range: entry 0% exit 100%;
+      }
+
+      @keyframes blur-clear-blur {
+        0% {
+          filter: blur(10px);
+          opacity: 0;
+        }
+        35% {
+          filter: blur(0px);
+          opacity: 1;
+        }
+        65% {
+          filter: blur(0px);
+          opacity: 1;
+        }
+        100% {
+          filter: blur(10px);
+          opacity: 0;
+        }
+      }
+
+      .gallery__content.visible {
+        visibility: visible;
+      }
+
+      .gallery__title {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+      }
+
+      .gallery__description {
+        font-size: 1rem;
+        line-height: 1.6;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="app">
+      <section class="gallery">
+        <div v-for="(item, index) in items" :key="index" class="gallery__item">
+          <img v-if="item" :src="item.image" :alt="item.title" class="gallery__image" />
+
+          <div v-if="items[index - 1]" class="gallery__content">
+            <h2 class="gallery__title">{{ items[index - 1].title }}</h2>
+            <p class="gallery__description">{{ items[index - 1].description }}</p>
+          </div>
+        </div>
+
+        <div v-if="lastItem" class="gallery__item hidden">
+          <img :src="lastItem.image" :alt="lastItem.title" class="gallery__image" />
+          <div class="gallery__content visible">
+            <h2 class="gallery__title">{{ lastItem.title }}</h2>
+            <p class="gallery__description">{{ lastItem.description }}</p>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <script>
+      const { createApp } = Vue;
+
+      createApp({
+        data() {
+          return {
+            items: [
+              {
+                title: 'Mountain View',
+                description: 'A peaceful trail through a Scottish highland.',
+                image: 'https://picsum.photos/id/1018/600/800',
+              },
+              {
+                title: 'Forest Path',
+                description: 'A breathtaking view of the mountains during sunrise.',
+                image: 'https://picsum.photos/id/1015/600/800',
+              },
+              {
+                title: 'Lake Lounge',
+                description: 'A still place to contemplate.',
+                image: 'https://picsum.photos/id/1011/600/800',
+              },
+            ],
+          };
+        },
+        computed: {
+          lastItem() {
+            return this.items[this.items.length - 1];
+          },
+        },
+      }).mount('#app');
+    </script>
+  </body>
+</html>
